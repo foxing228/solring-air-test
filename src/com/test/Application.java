@@ -1,14 +1,18 @@
 package com.test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Application {
     public static void main(String[] args) {
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(10);
+        list.add(15);
         System.out.println(calcSum(10));
+        System.out.println(reverse(list).toString());
         System.out.println(getDistance("ab", "bb"));
         System.out.println(getDistance("conversationalists", "conversationalists"));
     }
@@ -30,32 +34,41 @@ public class Application {
     }
 
     public static Integer getDistance(String a, String b) {
-            Map<Character,Integer> map = new HashMap();
+        Integer bothLen = a.length() + b.length();
 
-            for(char i : a.toCharArray()){
-                map.put(i,map.getOrDefault(i,0) + 1);
+        if (bothLen < 0 || bothLen > 1000) throw new IllegalArgumentException("invalid input");
+
+        if (a.length() < 0 || b.length() < 0 || a.length() > 1000 || b.length() > 1000) throw new IllegalArgumentException("invalid input");
+
+        Map<Character,Integer> map = new HashMap();
+
+        for(char i : a.toCharArray()){
+            map.put(i,map.getOrDefault(i,0) + 1);
+        }
+
+        int count  = 0;
+
+        for(int i = 0;i< b.length();i++){
+
+            char c = b.charAt(i);
+
+            if(!map.containsKey(c)){
+                count++;
             }
 
-            int count  = 0;
+            else {
 
-            for(int i = 0;i< b.length();i++){
+                int temp = map.get(c);
 
-                char c = b.charAt(i);
-
-                if(!map.containsKey(c)){
-                    count++;
+                if(temp == 1){
+                    map.remove(c);
                 }
 
                 else {
-                    int temp = map.get(c);
-                    if(temp == 1){
-                        map.remove(c);
-                    }
-                    else {
-                        map.put(c,temp - 1);
-                    }
+                    map.put(c,temp - 1);
                 }
             }
-            return count;
+        }
+        return count;
     }
 }
